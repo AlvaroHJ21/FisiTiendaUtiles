@@ -15,12 +15,23 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import java.nio.charset.Charset;
 
+/*
+    Esta clase recibe un mensaje de ProcesamientoOrdenes a través de la cola
+    ordenes_inventario
+    y tiene que enviar un mensaje a Reserva a través de la cola 
+    inventario_reserva
+*/
     
 public class AdministracionInventario {
 
     private static final String NAME_QUEUE = "ordenes_inventario";
+    
+    private static final String NAME_QUEUE_SEND = "inventario_reserva";
 
     public static void main(String[] args) throws Exception {
+        
+        String messageReserva = "Administracion hacia Reserva";
+        
         //abrir una coneccion
         ConnectionFactory connectionFactory = new ConnectionFactory();
         Connection connection = connectionFactory.newConnection();
@@ -42,5 +53,12 @@ public class AdministracionInventario {
         }, consumerTag -> {
             System.out.println("Consumidor: " + consumerTag + " cancelado");
         });
+        
+        //Declarar la cola "inventario_reserva"
+        channel.queueDeclare(NAME_QUEUE_SEND, false, false, false, null);
+        
+        // enviar mensaje a la cola "inventario_reserva" con el exchange por defecto
+        channel.basicPublish("", NAME_QUEUE_SEND, null, messageReserva.getBytes());
     }
+    
 }

@@ -15,6 +15,9 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import java.nio.charset.Charset;
 
+/*
+    Esta clase envía un mensaje a AdministracionInventario
+*/
 
 public class ProcesamientoOrdenes {
 
@@ -30,7 +33,7 @@ public class ProcesamientoOrdenes {
         //establecer un canal
         Channel channel = connection.createChannel();
 
-        //Declarar la cola "ordenes-inventario"
+        //Declarar la cola "ordenes_inventario"
         channel.queueDeclare(NAME_QUEUE, false, false, false, null);
 
         //Enviar mensaje al exchange por defecto ""
