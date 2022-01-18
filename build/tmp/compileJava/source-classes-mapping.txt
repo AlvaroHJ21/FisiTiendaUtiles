@@ -1,14 +1,14 @@
+FisiTiendaUtiles/AdministracionInventario.java
+ FisiTiendaUtiles.AdministracionInventario
+FisiTiendaUtiles/Queues.java
+ FisiTiendaUtiles.Queues
 FisiTiendaUtiles/Main.java
  FisiTiendaUtiles.Main
+FisiTiendaUtiles/ProcesamientoOrdenes.java
+ FisiTiendaUtiles.ProcesamientoOrdenes
 FisiTiendaUtiles/CuentasCobrar.java
  FisiTiendaUtiles.CuentasCobrar
 FisiTiendaUtiles/Reserva.java
  FisiTiendaUtiles.Reserva
 FisiTiendaUtiles/Facturacion.java
  FisiTiendaUtiles.Facturacion
-FisiTiendaUtiles/Queues.java
- FisiTiendaUtiles.Queues
-FisiTiendaUtiles/AdministracionInventario.java
- FisiTiendaUtiles.AdministracionInventario
-FisiTiendaUtiles/ProcesamientoOrdenes.java
- FisiTiendaUtiles.ProcesamientoOrdenes

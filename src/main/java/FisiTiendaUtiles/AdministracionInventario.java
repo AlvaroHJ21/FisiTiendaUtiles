@@ -29,7 +29,7 @@ public class AdministracionInventario {
 
     public static void main(String[] args) throws Exception {
 
-        //abrir una coneccion
+        //abrir una conexion
         ConnectionFactory connectionFactory = new ConnectionFactory();
         Connection connection = connectionFactory.newConnection();
 
