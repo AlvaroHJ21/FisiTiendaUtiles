@@ -15,6 +15,13 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import java.nio.charset.Charset;
 
+/*
+    Esta clase recibe un mensaje de Facturacion a través de la cola
+    facturacion_cuentas
+    y tiene que enviar un mensaje a ProcesamientoOrdenes a través de la cola
+    cuentas_ordenes
+*/
+
 public class CuentasCobrar {
     
     private static final String NAME_QUEUE_1 = "";
