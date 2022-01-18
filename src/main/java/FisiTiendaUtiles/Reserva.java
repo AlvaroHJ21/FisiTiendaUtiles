@@ -24,13 +24,12 @@ import java.nio.charset.Charset;
 
 public class Reserva {
     
-    private static final String NAME_QUEUE_RECEIVE = "inventario_reserva";
-    private static final String NAME_QUEUE_SEND = "reserva_facturacion";
+    private static final String NAME_QUEUE_RECEIVE = Queues.NAME_QUEUE_INVENTARIO_RESERVA;
+    private static final String NAME_QUEUE_SEND = Queues.NAME_QUEUE_RESERVA_FACTURACION;
     
     public static void main(String[] args) throws Exception {
-        //String messageFacturacion = "Reserva hacia Facturacion";
         
-        //abrir una coneccion
+        //abrir una conexion
         ConnectionFactory connectionFactory = new ConnectionFactory();
         Connection connection = connectionFactory.newConnection();
 
@@ -44,18 +43,46 @@ public class Reserva {
         channel.basicConsume(NAME_QUEUE_RECEIVE, true, (consumerTag, message) -> {
             String messageBody = new String(message.getBody(), Charset.defaultCharset());
 
+            System.out.println("Mensaje recibido");
             System.out.println("Mensaje: " + messageBody);
             System.out.println("Exchange: " + message.getEnvelope().getExchange());
             System.out.println("Routing key: " + message.getEnvelope().getRoutingKey());
             System.out.println("Delivery tag: " + message.getEnvelope().getDeliveryTag());
+            
+            //procesa el mensaje
+            messageBody = procesarMensaje(messageBody);
+
+            //envia el mensaje
+            enviarMensaje(messageBody);
+            
         }, consumerTag -> {
             System.out.println("Consumidor: " + consumerTag + " cancelado");
         });
         
-        //Declarar la cola "reserva_facturacion"
-        //channel.queueDeclare(NAME_QUEUE_SEND, false, false, false, null);
-        
-        // enviar mensaje a la cola "reserva_facturacion" con el exchange por defecto
-        //channel.basicPublish("", NAME_QUEUE_SEND, null, messageFacturacion.getBytes());
+    }
+    
+    public static String procesarMensaje(String mensaje) {
+        return mensaje += " (procesado por Reserva)";
+        //
+    }
+
+    public static void enviarMensaje(String mensaje) {
+        try {
+            //abrir una coneccion
+            ConnectionFactory connectionFactory = new ConnectionFactory();
+            Connection connection = connectionFactory.newConnection();
+
+            //establecer un canal
+            Channel channel = connection.createChannel();
+
+            //Declarar la cola "reserva_facturacion"
+            channel.queueDeclare(NAME_QUEUE_SEND, false, false, false, null);
+
+            // enviar mensaje a la cola "inventario_reserva" con el exchange por defecto
+            channel.basicPublish("", NAME_QUEUE_SEND, null, mensaje.getBytes());
+            System.out.println("Mensaje enviado: " + mensaje);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

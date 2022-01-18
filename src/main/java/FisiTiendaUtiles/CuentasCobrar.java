@@ -24,10 +24,64 @@ import java.nio.charset.Charset;
 
 public class CuentasCobrar {
     
-    private static final String NAME_QUEUE_1 = "";
-    private static final String NAME_QUEUE_2 = "";
+    private static final String NAME_QUEUE_RECEIVE = Queues.NAME_QUEUE_FACTURACION_CUENTAS;
+    private static final String NAME_QUEUE_SEND = Queues.NAME_QUEUE_CUENTAS_ORDENES;
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         
+        //abrir una conexion
+        ConnectionFactory connectionFactory = new ConnectionFactory();
+        Connection connection = connectionFactory.newConnection();
+
+        //establecer un canal
+        Channel channel = connection.createChannel();
+
+        //Declarar la cola "facturacion_cuentas"
+        channel.queueDeclare(NAME_QUEUE_RECEIVE, false, false, false, null);
+
+        //crear subscripcion a la cola "inventario_reserva" usando el comando Basic.consume
+        channel.basicConsume(NAME_QUEUE_RECEIVE, true, (consumerTag, message) -> {
+            String messageBody = new String(message.getBody(), Charset.defaultCharset());
+
+            System.out.println("Mensaje recibido");
+            System.out.println("Mensaje: " + messageBody);
+            System.out.println("Exchange: " + message.getEnvelope().getExchange());
+            System.out.println("Routing key: " + message.getEnvelope().getRoutingKey());
+            System.out.println("Delivery tag: " + message.getEnvelope().getDeliveryTag());
+            
+            //procesa el mensaje
+            messageBody = procesarMensaje(messageBody);
+
+            //envia el mensaje
+            enviarMensaje(messageBody);
+            
+        }, consumerTag -> {
+            System.out.println("Consumidor: " + consumerTag + " cancelado");
+        });
+    }
+    
+    public static String procesarMensaje(String mensaje) {
+        return mensaje += " (procesado por Cuentas por cobrar)";
+        //
+    }
+
+    public static void enviarMensaje(String mensaje) {
+        try {
+            //abrir una coneccion
+            ConnectionFactory connectionFactory = new ConnectionFactory();
+            Connection connection = connectionFactory.newConnection();
+
+            //establecer un canal
+            Channel channel = connection.createChannel();
+
+            //Declarar la cola "cuentas_ordenes"
+            channel.queueDeclare(NAME_QUEUE_SEND, false, false, false, null);
+
+            // enviar mensaje a la cola "inventario_reserva" con el exchange por defecto
+            channel.basicPublish("", NAME_QUEUE_SEND, null, mensaje.getBytes());
+            System.out.println("Mensaje enviado: " + mensaje);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
