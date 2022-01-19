@@ -91,6 +91,8 @@ public class Facturacion {
             System.out.println("MENSAJE ENVIADO (FANOUT)!");
             System.out.println("------------------------------------------------------");
             System.out.println("mensaje: " + mensaje);
+            System.out.println("queue 1: " + NAME_QUEUE_SEND_1);
+            System.out.println("queue 2: " + NAME_QUEUE_SEND_2);
             System.out.println("------------------------------------------------------");
 
             channel.close();
