@@ -23,7 +23,7 @@ import java.nio.charset.Charset;
  */
 public class ProcesamientoOrdenes {
 
-        private static final String NAME_QUEUE_SEND = Queues.NAME_QUEUE_ORDENES_INVENTARIO;
+    private static final String NAME_QUEUE_SEND = Queues.NAME_QUEUE_ORDENES_INVENTARIO;
     private static final String NAME_QUEUE_RECEIVE_1 = Queues.NAME_QUEUE_CUENTAS_ORDENES;
     private static final String NAME_QUEUE_RECEIVE_2 = Queues.NAME_QUEUE_FACTURACION_ORDENES;
 
