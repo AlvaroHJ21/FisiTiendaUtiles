@@ -13,7 +13,6 @@ package FisiTiendaUtiles;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Delivery;
 import java.nio.charset.Charset;
 
 /*
@@ -29,7 +28,7 @@ public class AdministracionInventario {
 
     public static void main(String[] args) throws Exception {
 
-        //abrir una coneccion
+        //abrir una conexion
         ConnectionFactory connectionFactory = new ConnectionFactory();
         Connection connection = connectionFactory.newConnection();
 
@@ -43,11 +42,13 @@ public class AdministracionInventario {
         channel.basicConsume(NAME_QUEUE_RECEIVE, true, (consumerTag, message) -> {
             String messageBody = new String(message.getBody(), Charset.defaultCharset());
 
-            System.out.println("Mensaje recibido");
+            System.out.println("MENSAJE RECIBIDO!");
+            System.out.println("------------------------------------------------------");
             System.out.println("Mensaje: " + messageBody);
             System.out.println("Exchange: " + message.getEnvelope().getExchange());
             System.out.println("Routing key: " + message.getEnvelope().getRoutingKey());
             System.out.println("Delivery tag: " + message.getEnvelope().getDeliveryTag());
+            System.out.println("------------------------------------------------------");
 
             //procesa el mensaje
             messageBody = procesarMensaje(messageBody);
@@ -59,21 +60,6 @@ public class AdministracionInventario {
             System.out.println("Consumidor: " + consumerTag + " cancelado");
         });
 
-    }
-
-    public static String procesarMensaje(String mensaje) {
-        return mensaje += " (procesado por inventario)";
-        //
-    }
-
-    public static String recibirMensaje() {
-        String mensaje = null;
-        try {
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return mensaje;
     }
 
     public static void enviarMensaje(String mensaje) {
@@ -90,10 +76,22 @@ public class AdministracionInventario {
 
             // enviar mensaje a la cola "inventario_reserva" con el exchange por defecto
             channel.basicPublish("", NAME_QUEUE_SEND, null, mensaje.getBytes());
-            System.out.println("Mensaje enviado: " + mensaje);
+
+            System.out.println("MENSAJE ENVIADO!");
+            System.out.println("------------------------------------------------------");
+            System.out.println("mensaje: " + mensaje);
+            System.out.println("queue: " + NAME_QUEUE_SEND);
+            System.out.println("------------------------------------------------------");
+
+            channel.close();
+            connection.close();
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
+    public static String procesarMensaje(String mensaje) {
+        return mensaje += " /inventario";
+    }
 }
